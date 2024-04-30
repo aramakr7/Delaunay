@@ -1,9 +1,11 @@
-#include <vector>
-#include <cmath>
+
 
 #pragma once
 #ifndef _GEOMETRY_H_
 #define _GEOMETRY_H
+
+#include <vector>
+#include <cmath>
 
 class Edge;
 class Vertex;
