@@ -5,6 +5,7 @@
 #include <vector>
 #include <tuple>
 #include <iostream>
+#include <algorithm>
 
 static void splice(Edge *e1, Edge *e2);
 static Edge *makeQuadEdge(std::vector<QuadEdge *> &edgeList);
@@ -31,7 +32,7 @@ Edge* locate(Vertex *x, Edge *e)
         if (x == e->getOrigin() || x == e->getDest())
         {
             std::cout << "found e" << std::endl;
-            
+
             return e;
         }
         else if (RightOf(e, x))
@@ -46,13 +47,13 @@ Edge* locate(Vertex *x, Edge *e)
         else if (!RightOf(e->oNext(), x))
         {
             std::cout << "!RightOf" << std::endl;
-            
+
             e = e->oNext();
         }
         else if (!RightOf(e->dPrev(), x))
         {
             std::cout << "!RightOf prev" << std::endl;
-            
+
             e = e->dPrev();
         }
         else
@@ -148,11 +149,11 @@ void insertSite(Vertex *x, std::vector<QuadEdge *> &edgeList, Edge* startingEdge
         e = base->oPrev();
 
     } while (e->lNext() != startingEdge);
-    
+
     while (true)
     {
         Edge* t = e->oPrev();
-        if (RightOf(e, t->getDest()) && 
+        if (RightOf(e, t->getDest()) &&
             InCircle(e->getOrigin(), t->getDest(), e->getDest(), x))
             {
                 swapEdge(e);
@@ -166,7 +167,7 @@ void insertSite(Vertex *x, std::vector<QuadEdge *> &edgeList, Edge* startingEdge
         {
             e = e->oNext()->lPrev();
         }
-        
+
     }
 }
 
@@ -197,7 +198,7 @@ std::vector<Vertex*> makePoints(int n)
 		points.push_back(new Vertex(buffer[i][0], buffer[i][1]));
 	}
 
-    return points; 
+    return points;
 }
 
 int main()
@@ -228,7 +229,7 @@ int main()
         }
     }
 
-    
+
 
     return 0;
 }
@@ -344,16 +345,16 @@ static bool ccw(Vertex* a, Vertex* b, Vertex* c)
 }
 
 static bool LeftOf(Edge* e, Vertex* z)
-{ 
+{
 	// Return true if the point is left of the oriented line defined by the edge
-	return ccw(z, e->getOrigin(), e->getDest()); 
+	return ccw(z, e->getOrigin(), e->getDest());
 }
 
 static bool RightOf(Edge* e, Vertex* z)
-{ 
+{
 	// Return true if the point is right of the oriented line defined by the edge
     std::cout << "in right of" << std::endl;
-	return ccw(z, e->getDest(), e->getOrigin()); 
+	return ccw(z, e->getDest(), e->getOrigin());
 }
 
 static bool InCircle(Vertex* a, Vertex* b, Vertex* c, Vertex* d)
