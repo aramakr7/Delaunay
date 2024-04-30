@@ -8,20 +8,20 @@ Edge* locate(Vertex *x, Edge *e)
     // E = Locate(x)
     while (true)
     {
-        LOG(INFO) << "in while loop" << std::endl;
+        LOG(INFO) << "in while loop" ;
         if(e->getOrigin() != nullptr)
         {
-            LOG(INFO) << "e: " << e->getOrigin()->x << ", " << e->getOrigin()->y << std::endl;
+            LOG(INFO) << "e: " << e->getOrigin()->x << ", " << e->getOrigin()->y ;
         }
         if (x == e->getOrigin() || x == e->getDest())
         {
-            LOG(INFO) << "found e" << std::endl;
+            LOG(INFO) << "found e" ;
 
             return e;
         }
         else if (RightOf(e, x))
         {
-            LOG(INFO) << "RightOf" << std::endl;
+            LOG(INFO) << "RightOf" ;
 
             e = e->sym();
             Edge* temp = e;
@@ -30,19 +30,19 @@ Edge* locate(Vertex *x, Edge *e)
         }
         else if (!RightOf(e->oNext(), x))
         {
-            LOG(INFO) << "!RightOf" << std::endl;
+            LOG(INFO) << "!RightOf" ;
 
             e = e->oNext();
         }
         else if (!RightOf(e->dPrev(), x))
         {
-            LOG(INFO) << "!RightOf prev" << std::endl;
+            LOG(INFO) << "!RightOf prev" ;
 
             e = e->dPrev();
         }
         else
         {
-            LOG(INFO) << "else" << std::endl;
+            LOG(INFO) << "else" ;
 
             return e;
         }
@@ -104,18 +104,18 @@ void swapEdge(Edge* e)
 void insertSite(Vertex *x, std::vector<QuadEdge *> &edgeList, Edge* startingEdge)
 {
     Edge *e = locate(x, startingEdge);
-    LOG(INFO) << "located point" << std::endl;
+    LOG(INFO) << "located point" ;
 
     if (x == e->getOrigin() || x == e->getDest())
     {
         // X is origin or destination of edge -> ignore + return
-        LOG(INFO) << "point was org or dest" << std::endl;
+        LOG(INFO) << "point was org or dest" ;
         return;
     }
     else if (e->hasPoint(x))
     {
         // X lies on edge e
-        LOG(INFO) << "point on edge" << std::endl;
+        LOG(INFO) << "point on edge" ;
         e = e->oPrev();
         deleteEdge(e->oNext(), edgeList);
     }
@@ -229,16 +229,16 @@ int main()
         if (i == 2)
         {
             startingEdge = makeTriangle(points[0], points[1], points[2], edgeList);
-            LOG(INFO) << "made triangle" << std::endl;
-            LOG(INFO) << startingEdge->getOrigin()->x << ", " << startingEdge->getOrigin()->y << std::endl;
+            LOG(INFO) << "made triangle" ;
+            LOG(INFO) << startingEdge->getOrigin()->x << ", " << startingEdge->getOrigin()->y ;
 
         }
         else if (i > 2)
         {
             for (QuadEdge *e : edgeList)
             {
-                LOG(INFO) << "point: " << i + 1 << std::endl;
-                LOG(INFO) << points[i]->x << ", " << points[i]->y << std::endl;
+                LOG(INFO) << "point: " << i + 1 ;
+                LOG(INFO) << points[i]->x << ", " << points[i]->y ;
                 insertSite(points[i], edgeList, startingEdge);
             }
         }
@@ -275,7 +275,7 @@ bool LeftOf(Edge* e, Vertex* z)
 bool RightOf(Edge* e, Vertex* z)
 {
 	// Return true if the point is right of the oriented line defined by the edge
-    LOG(INFO) << "in right of" << std::endl;
+    LOG(INFO) << "in right of" ;
 	return ccw(z, e->getDest(), e->getOrigin());
 }
 

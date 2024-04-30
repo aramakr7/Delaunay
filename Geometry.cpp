@@ -136,7 +136,7 @@ bool Edge::hasPoint(Vertex* p)
         if (abs(pointSlope) == abs(this->slope()))
         {
             return true;
-        } 
+        }
     }
 
     return false;
