@@ -1,8 +1,6 @@
 
 
 #pragma once
-#ifndef _GEOMETRY_H_
-#define _GEOMETRY_H
 
 #include <vector>
 #include <cmath>
@@ -10,9 +8,12 @@
 class Edge;
 class Vertex;
 class QuadEdge;
+class Triangulation;
 
 class Edge
 {
+    friend QuadEdge;
+    friend Triangulation;
     public:
         Edge(Vertex* origin);
         Edge();
@@ -32,6 +33,8 @@ class Edge
         Edge* lPrev();
         Edge* rNext();
         Edge* rPrev();
+
+        QuadEdge* QE(){return (QuadEdge*)(this - index);}
 
         void setNext(Edge* next);
         void setSym(Edge* sym);
@@ -76,10 +79,20 @@ class QuadEdge
     public:
         QuadEdge();
         Edge edges[4];
+
+    friend Edge* makeEdge(Vertex *a, Vertex *b);
+};
+
+class Triangulation
+{
+    public:
+        Triangulation(Vertex* a, Vertex* b, Vertex* c);
+        void insertSite(Vertex* x);
+
+    private:
+        Edge* startingEdge;
+
+
 };
 
 
-
-
-
-#endif

@@ -63,6 +63,8 @@ bool ccw(Vertex* a, Vertex* b, Vertex* c)
 {
     if(a == nullptr || b == nullptr || c == nullptr)
     {
+     	LOG(INFO) << "Return false CCW" ;
+		
         return false;
     }
 	// Returns true if c lies above the line through a and b

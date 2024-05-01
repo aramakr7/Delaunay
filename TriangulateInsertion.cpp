@@ -8,54 +8,66 @@ Edge* locate(Vertex *x, Edge *e)
     // E = Locate(x)
     while (true)
     {
-        LOG(INFO) << "in while loop" ;
-        if(e->getOrigin() != nullptr)
+        if((std::find(processed.begin(), processed.end(), e) != processed.end()))
         {
-            LOG(INFO) << "e: " << e->getOrigin()->x << ", " << e->getOrigin()->y ;
-        }
-        if (x == e->getOrigin() || x == e->getDest())
-        {
-            LOG(INFO) << "found e" ;
-
             return e;
-        }
-        else if (RightOf(e, x))
-        {
-            LOG(INFO) << "RightOf" ;
-
-            e = e->sym();
-            Edge* temp = e;
-            processed.push_back(temp);
-
-        }
-        else if (!RightOf(e->oNext(), x))
-        {
-            LOG(INFO) << "!RightOf" ;
-
-            e = e->oNext();
-        }
-        else if (!RightOf(e->dPrev(), x))
-        {
-            LOG(INFO) << "!RightOf prev" ;
-
-            e = e->dPrev();
         }
         else
         {
-            LOG(INFO) << "else" ;
+        
+            LOG(INFO) << "in while loop" ;
+            if(e->getOrigin() != nullptr)
+            {
+                LOG(INFO) << "e: " << e->getOrigin()->x << ", " << e->getOrigin()->y ;
+            }
+            if (x == e->getOrigin() || x == e->getDest())
+            {
+                LOG(INFO) << "found e" ;
 
-            return e;
+                return e;
+            }
+            else if (RightOf(e, x))
+            {
+                LOG(INFO) << "RightOf" ;
+
+                e = e->sym();
+                Edge* temp = e;
+                processed.push_back(temp);
+
+            }
+            else if (!RightOf(e->oNext(), x))
+            {
+                LOG(INFO) << "!RightOf" ;
+
+                e = e->oNext();
+                Edge* temp = e;
+                processed.push_back(temp);
+            }
+            else if (!RightOf(e->dPrev(), x))
+            {
+                LOG(INFO) << "!RightOf prev" ;
+
+                e = e->dPrev();
+                Edge* temp = e;
+                processed.push_back(temp);
+            }
+            else
+            {
+                LOG(INFO) << "else" ;
+
+                return e;
+            }
         }
     }
 }
 
-Edge* connect(Edge *e1, Edge *e2, std::vector<QuadEdge *> &edgeList)
+Edge* connect(Edge *e1, Edge *e2)
 {
-    Edge *e = makeQuadEdge(edgeList);
+    Edge *e = makeEdge();
     e->setOrigin(e1->getDest());
     e->setDest(e2->getOrigin());
 
-    // Perform splice operations -- I'm still not quite sure why
+    // Perform splice operations
     splice(e, e1->lNext());
     splice(e->sym(), e2);
 
@@ -63,28 +75,11 @@ Edge* connect(Edge *e1, Edge *e2, std::vector<QuadEdge *> &edgeList)
     return e;
 }
 
-Edge* makeEdge(Vertex *a, Vertex *b, std::vector<QuadEdge *> &edgeList)
+
+Edge* makeEdge()
 {
-    Edge *e = makeQuadEdge(edgeList);
-    e->setOrigin(a);
-    e->setDest(b);
-
-    return e;
-}
-
-Edge* makeTriangle(Vertex *a, Vertex *b, Vertex *c, std::vector<QuadEdge *> &edgeList)
-{
-    Edge *e1 = makeEdge(a, b, edgeList);
-    Edge *e2 = makeEdge(b, c, edgeList);
-
-    splice(e1->sym(), e2);
-
-    Edge* e3 = makeEdge(c, a, edgeList);
-    splice(e2->sym(), e3);
-    splice(e3->sym(), e1);
-
-
-    return e1;
+    QuadEdge* q = new QuadEdge();
+    return q->edges;
 }
 
 void swapEdge(Edge* e)
@@ -99,60 +94,6 @@ void swapEdge(Edge* e)
 
     e->setOrigin(a->getDest());
     e->setDest(b->getDest());
-}
-
-void insertSite(Vertex *x, std::vector<QuadEdge *> &edgeList, Edge* startingEdge)
-{
-    Edge *e = locate(x, startingEdge);
-    LOG(INFO) << "located point" ;
-
-    if (x == e->getOrigin() || x == e->getDest())
-    {
-        // X is origin or destination of edge -> ignore + return
-        LOG(INFO) << "point was org or dest" ;
-        return;
-    }
-    else if (e->hasPoint(x))
-    {
-        // X lies on edge e
-        LOG(INFO) << "point on edge" ;
-        e = e->oPrev();
-        deleteEdge(e->oNext(), edgeList);
-    }
-
-    Edge *base = makeQuadEdge(edgeList);
-    base->setOrigin(e->getOrigin());
-    base->setDest(e->getDest());
-
-    splice(base, e);
-    startingEdge = base;
-
-    do
-    {
-        base = connect(e, base->sym(), edgeList);
-        e = base->oPrev();
-
-    } while (e->lNext() != startingEdge);
-
-    while (true)
-    {
-        Edge* t = e->oPrev();
-        if (RightOf(e, t->getDest()) &&
-            InCircle(e->getOrigin(), t->getDest(), e->getDest(), x))
-            {
-                swapEdge(e);
-                e = e->oPrev();
-            }
-        else if (e->oNext() == startingEdge)
-        {
-            return;
-        }
-        else
-        {
-            e = e->oNext()->lPrev();
-        }
-
-    }
 }
 
 std::vector<Vertex*> makePoints(int n)
@@ -185,20 +126,12 @@ std::vector<Vertex*> makePoints(int n)
     return points;
 }
 
-Edge* makeQuadEdge(std::vector<QuadEdge*>& edgeList)
-{
-    edgeList.push_back(new QuadEdge());
-    return edgeList.back()->edges;
-}
 
-void deleteEdge(Edge* edge, std::vector<QuadEdge*>& edgeList)
+void deleteEdge(Edge* edge)
 {
     splice(edge, edge->oPrev());
     splice(edge->sym(), edge->sym()->oPrev());
 
-    QuadEdge* raw = (QuadEdge*)(edge - (edge->getIndex()));
-	edgeList.erase(std::remove(edgeList.begin(), edgeList.end(), raw));
-	delete raw;
 }
 
 
@@ -218,30 +151,19 @@ void InitializeLogger()
 int main()
 {
     InitializeLogger();
-    std::vector<Vertex *> points = makePoints(5);
+    std::vector<Vertex *> points = makePoints(8);
     std::vector<Vertex *> unprocessedPoints;
     std::vector<QuadEdge *> edgeList;
     Edge *startingEdge;
-
-    for (int i = 0; i < points.size(); i++)
-    {
-
-        if (i == 2)
-        {
-            startingEdge = makeTriangle(points[0], points[1], points[2], edgeList);
+    Triangulation tri(points[0], points[1], points[2]);
             LOG(INFO) << "made triangle" ;
-            LOG(INFO) << startingEdge->getOrigin()->x << ", " << startingEdge->getOrigin()->y ;
 
-        }
-        else if (i > 2)
-        {
-            for (QuadEdge *e : edgeList)
-            {
-                LOG(INFO) << "point: " << i + 1 ;
-                LOG(INFO) << points[i]->x << ", " << points[i]->y ;
-                insertSite(points[i], edgeList, startingEdge);
-            }
-        }
+    for (int i = 3; i < points.size(); i++)
+    {
+        LOG(INFO) << "point: " << i + 1 ;
+        LOG(INFO) << points[i]->x << ", " << points[i]->y ;
+        tri.insertSite(points[i]);
+            
     }
 
 

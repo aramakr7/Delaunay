@@ -1,4 +1,5 @@
 #include "Geometry.h"
+#include "common.h"
 
 Edge::Edge(Vertex* origin)
 {
@@ -123,11 +124,16 @@ float Edge::slope()
 
 bool Edge::hasPoint(Vertex* p)
 {
+
+    LOG(INFO) << "In has point" ;
+
     if ((p->x < this->origin->x && p->x < this->dest->x)
         || (p->x > this->origin->x && p->x > this->dest->x)
         || (p->y < this->origin->y && p->y < this->dest->y)
         || (p->y > this->origin->y && p->y > this->dest->y))
     {
+        LOG(INFO) << "Here?" ;
+
         return false;
     }
     else
@@ -170,5 +176,88 @@ QuadEdge::QuadEdge()
 
     edges[3].setIndex(3);
     edges[3].setNext((edges + 1));
+}
+
+// Creates a triangle given 3 vertices
+Triangulation::Triangulation(Vertex* a, Vertex* b, Vertex* c)
+{
+    Edge *e1 = makeEdge();
+    e1->setOrigin(a);
+    e1->setDest(b);
+
+    Edge *e2 = makeEdge();
+    e2->setOrigin(b);
+    e2->setDest(c);
+
+    splice(e1->sym(), e2);
+
+    Edge* e3 = makeEdge();
+    e3->setOrigin(c);
+    e3->setDest(a);
+    splice(e2->sym(), e3);
+    splice(e3->sym(), e1);
+
+    this->startingEdge = e1;
+
+}
+
+
+void Triangulation::insertSite(Vertex* x)
+{
+    Edge *e = locate(x, startingEdge);
+    LOG(INFO) << "located point" ;
+
+    if (x == e->getOrigin() || x == e->getDest())
+    {
+        // X is origin or destination of edge -> ignore + return
+        LOG(INFO) << "point was org or dest" ;
+        return;
+    }
+    else if (e->hasPoint(x))
+    {
+        // X lies on edge e
+        LOG(INFO) << "point on edge" ;
+        e = e->oPrev();
+        deleteEdge(e->oNext());
+    }
+
+    Edge *base = makeEdge();
+    LOG(INFO) << "Made QE" ;
+
+    base->setOrigin(e->getOrigin());
+    base->setDest(e->getDest());
+
+    splice(base, e);
+    startingEdge = base;
+
+     LOG(INFO) << "Made base" ;
+
+
+    do
+    {
+        base = connect(e, base->sym());
+        e = base->oPrev();
+
+    } while (e->lNext() != startingEdge);
+
+    while (true)
+    {
+        Edge* t = e->oPrev();
+        if (RightOf(e, t->getDest()) &&
+            InCircle(e->getOrigin(), t->getDest(), e->getDest(), x))
+            {
+                swapEdge(e);
+                e = e->oPrev();
+            }
+        else if (e->oNext() == startingEdge)
+        {
+            return;
+        }
+        else
+        {
+            e = e->oNext()->lPrev();
+        }
+
+    }
 }
 
