@@ -9,7 +9,7 @@ std::ostream &operator<<(std::ostream &os, const Vertex *edge)
     else
     {
 
-        os << "(" << edge->x << "," << edge->y << ")";
+        os << edge->x << "," << edge->y;
     }
     return os;
 }

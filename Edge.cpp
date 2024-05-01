@@ -172,9 +172,10 @@ bool Edge::hasPoint(Vertex* p)
 // Definition of the overloaded << operator
 std::ostream& operator<<(std::ostream& os, const Edge* edge)
 {
-    os << "Edge: ([" << edge->index << "] ";
-    os << "Origin:" << edge->origin;
-    os << " Dest:" << edge->dest;
-    os << ")";
+    //os << "Edge: ([" << edge->index << "] ";
+    //os << "Origin:" << edge->origin;
+    //os << " Dest:" << edge->dest;
+    //os << ")";
+    os << edge->origin << "," << edge->dest;
     return os;
 }

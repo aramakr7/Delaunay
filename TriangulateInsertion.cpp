@@ -32,14 +32,6 @@ std::vector<Vertex *> makePoints(int n)
         points.push_back(new Vertex(buffer[i][0], buffer[i][1]));
     }
 
-    points.clear();
-    points.push_back(new Vertex(88, 101));
-    points.push_back(new Vertex(444, 208));
-    points.push_back(new Vertex(137, 362));
-    //points.push_back(new Vertex(478, 405));
-    //points.push_back(new Vertex(456, 220));
-    points.push_back(new Vertex(200, 200));
-
     return points;
 }
 
@@ -59,7 +51,7 @@ void InitializeLogger()
 int main()
 {
     InitializeLogger();
-    std::vector<Vertex *> points = makePoints(8);
+    std::vector<Vertex *> points = makePoints(800);
     std::vector<Vertex *> unprocessedPoints;
     std::vector<QuadEdge *> edgeList;
     Edge *startingEdge;
@@ -85,7 +77,7 @@ int main()
 
     for (size_t i = 0; i < tri.m_edges.size(); i++)
     {
-        std::cout << "\n\t" << tri.m_edges[i] << std::endl;
+        std::cout << "" << tri.m_edges[i] << std::endl;
     }
     std::cout << "\n\n";
 
