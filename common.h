@@ -3,10 +3,9 @@
 #pragma once
 
 #include "easylogging++.h"
-
-#ifndef _GEOMETRY_H_
-#include "Geometry.h"
-#endif
+#include "Vertex.h"
+#include "Edge.h"
+#include "QuadEdge.h"
 
 #include <vector>
 #include <tuple>
@@ -15,10 +14,7 @@
 double Det3x3(double *col_0, double *col_1, double *col_2);
 double Det4x4(double *col_0, double *col_1, double *col_2, double *col_3);
 bool ccw(Vertex *a, Vertex *b, Vertex *c);
-void splice(Edge *e1, Edge *e2);
-Edge *makeQuadEdge();
-Edge *makeEdge();
-QuadEdge *makeQEdge();
+
 Edge *locate(Vertex *x, Edge *e);
 Edge *connect(Edge *e1, Edge *e2);
 void deleteEdge(Edge *edge);

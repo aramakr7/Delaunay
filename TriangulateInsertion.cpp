@@ -1,105 +1,9 @@
 #include "common.h"
 #include "Triangulation.h"
+#include "QuadEdge.h"
 
 INITIALIZE_EASYLOGGINGPP
 
-Edge *locate(Vertex *x, Edge *e)
-{
-    std::vector<Edge *> processed;
-    // E = Locate(x)
-    while (true)
-    {
-        if ((std::find(processed.begin(), processed.end(), e) != processed.end()))
-        {
-            return e;
-        }
-        else
-        {
-
-            LOG(INFO) << "in while loop";
-            if (e->getOrigin() != nullptr)
-            {
-                LOG(INFO) << "e: " << e->getOrigin()->x << ", " << e->getOrigin()->y;
-            }
-            if (x == e->getOrigin() || x == e->getDest())
-            {
-                LOG(INFO) << "found e";
-
-                return e;
-            }
-            else if (RightOf(e, x))
-            {
-                LOG(INFO) << "RightOf";
-
-                e = e->sym();
-                Edge *temp = e;
-                processed.push_back(temp);
-            }
-            else if (!RightOf(e->oNext(), x))
-            {
-                LOG(INFO) << "!RightOf";
-
-                e = e->oNext();
-                Edge *temp = e;
-                processed.push_back(temp);
-            }
-            else if (!RightOf(e->dPrev(), x))
-            {
-                LOG(INFO) << "!RightOf prev";
-
-                e = e->dPrev();
-                Edge *temp = e;
-                processed.push_back(temp);
-            }
-            else
-            {
-                LOG(INFO) << "else";
-
-                return e;
-            }
-        }
-    }
-}
-
-Edge *makeEdge()
-{
-    QuadEdge *q = new QuadEdge();
-    return q->edges;
-}
-QuadEdge *makeQEdge()
-{
-    return new QuadEdge();
-}
-Edge *connect(Edge *e1, Edge *e2)
-{
-    QuadEdge *e1_q = makeQEdge();
-    Edge *e = e1_q->edges;
-    e->setOrigin(e1->getDest());
-    e->setDest(e2->getOrigin());
-    LOG(DEBUG) << *e1_q;
-
-    // Perform splice operations
-    splice(e, e1->lNext());
-    splice(e->sym(), e2);
-    LOG(DEBUG) << *e1_q;
-
-    // Return a pointer to our new edge
-    return e;
-}
-
-void swapEdge(Edge *e)
-{
-    Edge *a = e->oPrev();
-    Edge *b = e->sym()->oPrev();
-
-    splice(e, a);
-    splice(e->sym(), b);
-    splice(e, a->lNext());
-    splice(e->sym(), b->lNext());
-
-    e->setOrigin(a->getDest());
-    e->setDest(b->getDest());
-}
 
 std::vector<Vertex *> makePoints(int n)
 {
@@ -117,8 +21,8 @@ std::vector<Vertex *> makePoints(int n)
     }
 
     // Sort it lexicographically; we need this step
-    std::sort(buffer.begin(), buffer.end());
-    buffer.erase(std::unique(buffer.begin(), buffer.end()), buffer.end());
+    //std::sort(buffer.begin(), buffer.end());
+    //buffer.erase(std::unique(buffer.begin(), buffer.end()), buffer.end());
 
     std::vector<Vertex *> points;
 
@@ -128,14 +32,16 @@ std::vector<Vertex *> makePoints(int n)
         points.push_back(new Vertex(buffer[i][0], buffer[i][1]));
     }
 
+    points.clear();
+    points.push_back(new Vertex(88, 101));
+    points.push_back(new Vertex(444, 208));
+    points.push_back(new Vertex(137, 362));
+    points.push_back(new Vertex(478, 405));
+    points.push_back(new Vertex(456, 220));
+
     return points;
 }
 
-void deleteEdge(Edge *edge)
-{
-    splice(edge, edge->oPrev());
-    splice(edge->sym(), edge->sym()->oPrev());
-}
 
 void InitializeLogger()
 {
@@ -156,59 +62,24 @@ int main()
     std::vector<Vertex *> unprocessedPoints;
     std::vector<QuadEdge *> edgeList;
     Edge *startingEdge;
+
+    QuadEdge *q = new QuadEdge();
+    q->edges[0].setOrigin(new Vertex(0,0));
+    q->edges[0].setDest(new Vertex(10,10));
+
+    LOG(INFO) << *q;
+
+   // exit(1);
     Triangulation tri(points[0], points[1], points[2]);
     LOG(INFO) << "made triangle";
 
     for (size_t i = 3; i < points.size(); i++)
     {
+        std::cout << "\n\n\n\n\n\n\n\n\n" << std::endl;
         LOG(INFO) << "point: " << i + 1;
         LOG(INFO) << points[i]->x << ", " << points[i]->y;
         tri.insertSite(points[i]);
     }
 
     return 0;
-}
-
-void splice(Edge *e1, Edge *e2)
-{
-    Edge *alpha = e1->oNext()->rot();
-    Edge *beta = e2->oNext()->rot();
-
-    Edge *t1 = e2->oNext();
-    Edge *t2 = e1->oNext();
-    Edge *t3 = beta->oNext();
-    Edge *t4 = alpha->oNext();
-
-    e1->setNext(t1);
-    e2->setNext(t2);
-    alpha->setNext(t3);
-    beta->setNext(t4);
-}
-
-bool LeftOf(Edge *e, Vertex *z)
-{
-    // Return true if the point is left of the oriented line defined by the edge
-    return ccw(z, e->getOrigin(), e->getDest());
-}
-
-bool RightOf(Edge *e, Vertex *z)
-{
-    // Return true if the point is right of the oriented line defined by the edge
-    LOG(INFO) << "in right of" << e;
-    return ccw(z, e->getDest(), e->getOrigin());
-}
-
-bool InCircle(Vertex *a, Vertex *b, Vertex *c, Vertex *d)
-{
-    // Returns true if d is in the circle circumscribing the triangle [abc]
-    // This reduces to a linear algebraic question; see Guibas and Stolfi
-
-    // Set up our matrix
-    double m[4][4] = {{a->x, b->x, c->x, d->x},
-                      {a->y, b->y, c->y, d->y},
-                      {a->lengthSquared(), b->lengthSquared(), c->lengthSquared(), d->lengthSquared()},
-                      {1, 1, 1, 1}};
-
-    // Return true if our determinant is positive
-    return Det4x4(m[0], m[1], m[2], m[3]) > 0;
 }

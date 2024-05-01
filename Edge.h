@@ -1,9 +1,9 @@
 #pragma once
 
-#include <vector>
+#include "Vertex.h"
 #include <cmath>
 #include <iostream>
-#include "Vertex.h"
+#include <vector>
 
 class Edge;
 class Vertex;
@@ -16,42 +16,40 @@ class Edge
     friend Triangulation;
 
 public:
-    Edge(Vertex *origin);
+    Edge(Vertex* origin);
     Edge();
     ~Edge();
 
-    Edge *rot();
-    Edge *invRot();
-    Edge *sym();
+    Edge* rot();
+    Edge* invRot();
+    Edge* sym();
 
-    Edge *oNext();
-    Edge *oPrev();
-    Edge *dNext();
-    Edge *dPrev();
+    Edge* oNext();
+    Edge* oPrev();
+    Edge* dNext();
+    Edge* dPrev();
 
-    Edge *lNext();
-    Edge *lPrev();
-    Edge *rNext();
-    Edge *rPrev();
+    Edge* lNext();
+    Edge* lPrev();
+    Edge* rNext();
+    Edge* rPrev();
 
-    QuadEdge *QE() { return (QuadEdge *)(this - index); }
-
-    void setNext(Edge *next);
-    void setSym(Edge *sym);
+    void setNext(Edge* next);
+    void setSym(Edge* sym);
     void flip();
-    void setOrigin(Vertex *origin);
-    Vertex *getOrigin();
-    void setDest(Vertex *dest);
-    Vertex *getDest();
+    void setOrigin(Vertex* origin);
+    Vertex* getOrigin();
+    void setDest(Vertex* dest);
+    Vertex* getDest();
     void setIndex(int index);
     int getIndex();
     float slope();
-    bool hasPoint(Vertex *p);
+    bool hasPoint(Vertex* p);
 
     // Overloaded << operator as a friend function
-    friend std::ostream &operator<<(std::ostream &os, const Edge *edge);
-    Vertex *origin;
-    Vertex *dest;
-    Edge *next;
+    friend std::ostream& operator<<(std::ostream& os, const Edge* edge);
+    Vertex* origin;
+    Vertex* dest;
+    Edge* next;
     int index;
 };

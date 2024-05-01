@@ -1,20 +1,23 @@
 
 
-#include "easylogging++.h"
 #include "Edge.h"
 #include "Vertex.h"
+#include "easylogging++.h"
 
-Edge::Edge(Vertex *origin)
+Edge::Edge(Vertex* origin)
 {
     this->origin = origin;
 }
 
 Edge::Edge()
-    : origin(new Vertex(-1, -1)), dest(new Vertex(-1, -1))
+    : origin(new Vertex(-1, -1))
+    , dest(new Vertex(-1, -1))
 {
 }
 
-Edge::~Edge() {}
+Edge::~Edge()
+{
+}
 
 Edge *Edge::rot()
 {
@@ -49,76 +52,78 @@ Edge *Edge::sym()
     return this + 2;
 }
 
-Edge *Edge::oNext()
+Edge* Edge::oNext()
 {
     LOG(DEBUG);
     return this->next;
 }
 
-Edge *Edge::oPrev()
+Edge* Edge::oPrev()
 {
     LOG(DEBUG);
     return this->rot()->oNext()->rot();
 }
 
-Edge *Edge::dNext()
+Edge* Edge::dNext()
 {
     LOG(DEBUG);
     return this->sym()->oNext()->sym();
 }
 
-Edge *Edge::dPrev()
+Edge* Edge::dPrev()
 {
     LOG(DEBUG);
     return this->invRot()->oNext()->invRot();
 }
 
-Edge *Edge::lNext()
+Edge* Edge::lNext()
 {
     LOG(DEBUG);
     return this->invRot()->oNext()->rot();
 }
 
-Edge *Edge::lPrev()
+Edge* Edge::lPrev()
 {
     LOG(DEBUG);
     return this->oNext()->sym();
 }
 
-Edge *Edge::rNext()
+Edge* Edge::rNext()
 {
     LOG(DEBUG);
     return this->rot()->oNext()->invRot();
 }
 
-Edge *Edge::rPrev()
+Edge* Edge::rPrev()
 {
     LOG(DEBUG);
     return this->sym()->oNext();
 }
 
-void Edge::setNext(Edge *next)
+void Edge::setNext(Edge* next)
 {
     this->next = next;
 }
 
-void Edge::setOrigin(Vertex *origin)
+void Edge::setOrigin(Vertex* origin)
 {
     LOG(INFO) << "setOrigin" << origin;
     this->origin = origin;
+    (this + ((2+index)%4))->dest = origin;
 }
 
-Vertex *Edge::getOrigin()
+Vertex* Edge::getOrigin()
 {
     return this->origin;
 }
 
-void Edge::setDest(Vertex *dest)
+void Edge::setDest(Vertex* dest)
 {
     this->dest = dest;
+    (this + ((2+index)%4))->origin = dest;
 }
 
-Vertex *Edge::getDest()
+Vertex* Edge::getDest()
 {
     return this->dest;
 }
@@ -138,12 +143,13 @@ float Edge::slope()
     return ((this->dest->y - this->origin->y) / (this->dest->x - this->origin->x));
 }
 
-bool Edge::hasPoint(Vertex *p)
+bool Edge::hasPoint(Vertex* p)
 {
 
     LOG(INFO) << "In has point";
 
-    if ((p->x < this->origin->x && p->x < this->dest->x) || (p->x > this->origin->x && p->x > this->dest->x) || (p->y < this->origin->y && p->y < this->dest->y) || (p->y > this->origin->y && p->y > this->dest->y))
+    if ((p->x < this->origin->x && p->x < this->dest->x) || (p->x > this->origin->x && p->x > this->dest->x) ||
+        (p->y < this->origin->y && p->y < this->dest->y) || (p->y > this->origin->y && p->y > this->dest->y))
     {
         LOG(INFO) << "Here?";
 
@@ -164,7 +170,7 @@ bool Edge::hasPoint(Vertex *p)
     return false;
 }
 // Definition of the overloaded << operator
-std::ostream &operator<<(std::ostream &os, const Edge *edge)
+std::ostream& operator<<(std::ostream& os, const Edge* edge)
 {
     os << "Edge: ([" << edge->index << "] ";
     os << "Origin:" << edge->origin;

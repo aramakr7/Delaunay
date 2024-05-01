@@ -1,13 +1,13 @@
 #include "QuadEdge.h"
 
-std::ostream &operator<<(std::ostream &os, const QuadEdge &qe)
+std::ostream& operator<<(std::ostream& os, const QuadEdge& qe)
 {
-    os << "QE{";
+    os << "\nQE{";
     for (int i = 0; i < 4; i++)
     {
         os << "\n\t" << &qe.edges[i];
     }
-    os << "}";
+    os << "\n}";
     ;
     return os;
 }
