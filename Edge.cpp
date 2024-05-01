@@ -10,8 +10,7 @@ Edge::Edge(Vertex *origin)
 }
 
 Edge::Edge()
-    : origin(new Vertex(-1, -1))
-    , dest(new Vertex(-1, -1))
+    : origin(new Vertex(-1, -1)), dest(new Vertex(-1, -1))
 {
 }
 
@@ -168,22 +167,8 @@ bool Edge::hasPoint(Vertex *p)
 std::ostream &operator<<(std::ostream &os, const Edge *edge)
 {
     os << "Edge: ([" << edge->index << "] ";
-    if (edge->origin != nullptr)
-    {
-        os << "Origin:" << edge->origin;
-    }
-    else
-    {
-        os << "Origin: null";
-    }
-    if (edge->dest != nullptr)
-    {
-        os << " Dest:" << edge->dest;
-    }
-    else
-    {
-        os << "Dest: null";
-    }
+    os << "Origin:" << edge->origin;
+    os << " Dest:" << edge->dest;
     os << ")";
     return os;
 }

@@ -1,0 +1,37 @@
+Language: Cpp
+Standard: c++03
+BasedOnStyle: LLVM
+UseTab: Never
+IndentWidth: 4
+TabWidth: 4
+BreakBeforeBraces: Allman
+IndentCaseLabels: true
+ColumnLimit: 120
+
+# Namespace
+NamespaceIndentation: All
+FixNamespaceComments: false
+
+# Force braces to be present on control statments (if, else, for, do, and while)
+InsertBraces: true
+
+# Templates
+AlwaysBreakTemplateDeclarations: Yes
+
+# No single line stuff
+AllowShortFunctionsOnASingleLine: None
+AllowShortIfStatementsOnASingleLine: false
+
+# Class declirations and initializers
+EmptyLineBeforeAccessModifier: LogicalBlock
+AccessModifierOffset: -4
+BreakConstructorInitializers: BeforeComma
+PackConstructorInitializers: Never
+
+# Force pointers to the type for C++.
+DerivePointerAlignment: false
+PointerAlignment: Left
+
+# Trailing comments
+AlignTrailingComments: true
+SpacesBeforeTrailingComments: 2

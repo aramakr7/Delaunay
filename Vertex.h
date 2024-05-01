@@ -5,18 +5,17 @@ class Edge;
 
 class Vertex
 {
-    public:
-        Vertex(float x, float y);
-        ~Vertex();
+public:
+    Vertex(float x, float y);
+    ~Vertex();
 
-        float x;
-        float y;
-        Edge* getEdge();
-        void addEdge(Edge* edge);
-        float lengthSquared();
+    float x;
+    float y;
+    Edge *getEdge();
+    void addEdge(Edge *edge);
+    float lengthSquared();
 
-        // Overloaded << operator as a friend function
-        friend std::ostream& operator<<(std::ostream& os, const Vertex* edge);
-        Edge* edge;
-
+    // Overloaded << operator as a friend function
+    friend std::ostream &operator<<(std::ostream &os, const Vertex *edge);
+    Edge *edge;
 };

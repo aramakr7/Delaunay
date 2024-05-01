@@ -14,7 +14,6 @@ std::ostream &operator<<(std::ostream &os, const Vertex *edge)
     return os;
 }
 
-
 Vertex::Vertex(float x, float y)
 {
     this->x = x;

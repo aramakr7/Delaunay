@@ -1,11 +1,8 @@
 
 #include "easylogging++.h"
 
-
 #include "Triangulation.h"
 #include "common.h"
-
-
 
 // Creates a triangle given 3 vertices
 Triangulation::Triangulation(Vertex *a, Vertex *b, Vertex *c)
