@@ -11,6 +11,7 @@ Edge::~Edge(){}
 
 Edge* Edge::rot()
 {
+    LOG(DEBUG);
     if (this->index == 3)
     {
         return this - 3;
@@ -22,6 +23,7 @@ Edge* Edge::rot()
 
 Edge* Edge::invRot()
 {
+    LOG(DEBUG);
     if (this->index == 0)
     {
         return this + 3;
@@ -33,6 +35,7 @@ Edge* Edge::invRot()
 
 Edge* Edge::sym()
 {
+    LOG(DEBUG);
     if (this->index > 2)
     {
         return this - 2;
@@ -43,41 +46,49 @@ Edge* Edge::sym()
 
 Edge* Edge::oNext()
 {
+    LOG(DEBUG);
     return this->next;
 }
 
 Edge* Edge::oPrev()
 {
+    LOG(DEBUG);
     return this->rot()->oNext()->rot();
 }
 
 Edge* Edge::dNext()
 {
+    LOG(DEBUG);
     return this->sym()->oNext()->sym();
 }
 
 Edge* Edge::dPrev()
 {
+    LOG(DEBUG);
     return this->invRot()->oNext()->invRot();
 }
 
 Edge* Edge::lNext()
 {
+    LOG(DEBUG);
     return this->invRot()->oNext()->rot();
 }
 
 Edge* Edge::lPrev()
 {
+    LOG(DEBUG);
     return this->oNext()->sym();
 }
 
 Edge* Edge::rNext()
 {
+    LOG(DEBUG);
     return this->rot()->oNext()->invRot();
 }
 
 Edge* Edge::rPrev()
 {
+    LOG(DEBUG);
     return this->sym()->oNext();
 }
 
@@ -179,7 +190,7 @@ std::ostream& operator<<(std::ostream& os, const Edge* edge) {
 std::ostream& operator<<(std::ostream& os, const Vertex* edge) {
     if (edge == nullptr)
     {   
-        os << " (edge is null)";
+        os << " (vertex is null)";
 
     }
     else{
@@ -207,7 +218,7 @@ QuadEdge::QuadEdge()
     edges[0].setIndex(0);
     edges[0].setNext((edges + 0));
 
-    edges[0].setIndex(0);
+    edges[1].setIndex(1);
     edges[1].setNext((edges + 3));
 
     edges[2].setIndex(2);
@@ -220,6 +231,7 @@ QuadEdge::QuadEdge()
 // Creates a triangle given 3 vertices
 Triangulation::Triangulation(Vertex* a, Vertex* b, Vertex* c)
 {
+    LOG(INFO) << "Creating triangulation";
     Edge *e1 = makeEdge();
     e1->setOrigin(a);
     e1->setDest(b);
@@ -235,6 +247,9 @@ Triangulation::Triangulation(Vertex* a, Vertex* b, Vertex* c)
     e3->setDest(a);
     splice(e2->sym(), e3);
     splice(e3->sym(), e1);
+    LOG(INFO) << "Edge one: " << e1;
+    LOG(INFO) << "Edge two: " << e2;
+    LOG(INFO) << "Edge the: " << e3;
 
     this->startingEdge = e1;
 

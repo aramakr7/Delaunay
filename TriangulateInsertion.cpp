@@ -197,7 +197,7 @@ bool LeftOf(Edge* e, Vertex* z)
 bool RightOf(Edge* e, Vertex* z)
 {
 	// Return true if the point is right of the oriented line defined by the edge
-    LOG(INFO) << "in right of" ;
+    LOG(INFO) << "in right of" << e;
 	return ccw(z, e->getDest(), e->getOrigin());
 }
 
