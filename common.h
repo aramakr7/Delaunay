@@ -18,6 +18,7 @@ bool ccw(Vertex* a, Vertex* b, Vertex* c);
 void splice(Edge *e1, Edge *e2);
 Edge *makeQuadEdge();
 Edge* makeEdge();
+QuadEdge* makeQEdge();
 Edge* locate(Vertex *x, Edge *e);
 Edge* connect(Edge *e1, Edge *e2);
 void deleteEdge(Edge *edge);

@@ -14,7 +14,7 @@ Edge* locate(Vertex *x, Edge *e)
         }
         else
         {
-        
+
             LOG(INFO) << "in while loop" ;
             if(e->getOrigin() != nullptr)
             {
@@ -61,26 +61,33 @@ Edge* locate(Vertex *x, Edge *e)
     }
 }
 
-Edge* connect(Edge *e1, Edge *e2)
-{
-    Edge *e = makeEdge();
-    e->setOrigin(e1->getDest());
-    e->setDest(e2->getOrigin());
-
-    // Perform splice operations
-    splice(e, e1->lNext());
-    splice(e->sym(), e2);
-
-    // Return a pointer to our new edge
-    return e;
-}
-
 
 Edge* makeEdge()
 {
     QuadEdge* q = new QuadEdge();
     return q->edges;
 }
+QuadEdge* makeQEdge()
+{
+    return new QuadEdge();
+}
+Edge* connect(Edge *e1, Edge *e2)
+{
+    QuadEdge *e1_q = makeQEdge();
+    Edge* e = e1_q->edges;
+    e->setOrigin(e1->getDest());
+    e->setDest(e2->getOrigin());
+    LOG(DEBUG) << *e1_q;
+
+    // Perform splice operations
+    splice(e, e1->lNext());
+    splice(e->sym(), e2);
+    LOG(DEBUG) << *e1_q;
+
+    // Return a pointer to our new edge
+    return e;
+}
+
 
 void swapEdge(Edge* e)
 {
@@ -163,7 +170,7 @@ int main()
         LOG(INFO) << "point: " << i + 1 ;
         LOG(INFO) << points[i]->x << ", " << points[i]->y ;
         tri.insertSite(points[i]);
-            
+
     }
 
 

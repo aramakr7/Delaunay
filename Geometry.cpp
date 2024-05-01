@@ -1,202 +1,28 @@
 #include "Geometry.h"
 #include "common.h"
 
-Edge::Edge(Vertex* origin)
+std::ostream &operator<<(std::ostream &os, const Vertex *edge)
 {
-    this->origin = origin;
-}
-
-Edge::Edge(){}
-Edge::~Edge(){}
-
-Edge* Edge::rot()
-{
-    LOG(DEBUG);
-    if (this->index == 3)
+    if (edge == nullptr)
     {
-        return this - 3;
-    }
-
-    return this + 1;
-
-}
-
-Edge* Edge::invRot()
-{
-    LOG(DEBUG);
-    if (this->index == 0)
-    {
-        return this + 3;
-    }
-
-    return this - 1;
-
-}
-
-Edge* Edge::sym()
-{
-    LOG(DEBUG);
-    if (this->index > 2)
-    {
-        return this - 2;
-    }
-
-    return this + 2;
-}
-
-Edge* Edge::oNext()
-{
-    LOG(DEBUG);
-    return this->next;
-}
-
-Edge* Edge::oPrev()
-{
-    LOG(DEBUG);
-    return this->rot()->oNext()->rot();
-}
-
-Edge* Edge::dNext()
-{
-    LOG(DEBUG);
-    return this->sym()->oNext()->sym();
-}
-
-Edge* Edge::dPrev()
-{
-    LOG(DEBUG);
-    return this->invRot()->oNext()->invRot();
-}
-
-Edge* Edge::lNext()
-{
-    LOG(DEBUG);
-    return this->invRot()->oNext()->rot();
-}
-
-Edge* Edge::lPrev()
-{
-    LOG(DEBUG);
-    return this->oNext()->sym();
-}
-
-Edge* Edge::rNext()
-{
-    LOG(DEBUG);
-    return this->rot()->oNext()->invRot();
-}
-
-Edge* Edge::rPrev()
-{
-    LOG(DEBUG);
-    return this->sym()->oNext();
-}
-
-void Edge::setNext(Edge* next)
-{
-    this->next = next;
-}
-
-void Edge::setOrigin(Vertex* origin)
-{
-    LOG(INFO) << "setOrigin" << origin;
-    this->origin = origin;
-}
-
-Vertex* Edge::getOrigin()
-{
-    return this->origin;
-}
-
-void Edge::setDest(Vertex* dest)
-{
-    this->dest = dest;
-}
-
-Vertex* Edge::getDest()
-{
-    return this->dest;
-}
-
-void Edge::setIndex(int index)
-{
-    this->index = index;
-}
-
-int Edge::getIndex()
-{
-    return this->index;
-}
-
-
-float Edge::slope()
-{
-    return ((this->dest->y - this->origin->y)/(this->dest->x- this->origin->x));
-}
-
-bool Edge::hasPoint(Vertex* p)
-{
-
-    LOG(INFO) << "In has point" ;
-
-    if ((p->x < this->origin->x && p->x < this->dest->x)
-        || (p->x > this->origin->x && p->x > this->dest->x)
-        || (p->y < this->origin->y && p->y < this->dest->y)
-        || (p->y > this->origin->y && p->y > this->dest->y))
-    {
-        LOG(INFO) << "Here?" ;
-
-        return false;
+        os << " (vertex is null)";
     }
     else
     {
-        LOG(INFO) << "Here?" ;
-        float pointSlope = ((this->dest->y - p->y)/(this->dest->x - p->x));
-        LOG(INFO) << "Here?" ;
-        if (abs(pointSlope) == abs(this->slope()))
-        {
-            return true;
-        }
-    }
 
-    LOG(INFO) << "Here?" ;
-    return false;
-
-}
-// Definition of the overloaded << operator
-std::ostream& operator<<(std::ostream& os, const Edge* edge) {
-    os << "Edge: (["<< edge->index << "] ";
-    if ( edge->origin != nullptr )
-    {
-        os << "Origin:" << edge->origin;
+        os << "(" << edge->x << "," << edge->y << ")";
     }
-    else
-    {
-        os << "Origin: null";
-    }
-    if ( edge->dest != nullptr )
-    {
-        os <<" Dest:" << edge->dest;
-    }
-    else
-    {
-        os << "Dest: null";
-    }
-    os <<  ")";
     return os;
 }
-
-
-std::ostream& operator<<(std::ostream& os, const Vertex* edge) {
-    if (edge == nullptr)
-    {   
-        os << " (vertex is null)";
-
+std::ostream &operator<<(std::ostream &os, const QuadEdge &qe)
+{
+    os << "QE{";
+    for (int i = 0; i < 4; i++)
+    {
+        os << "\n\t" << &qe.edges[i];
     }
-    else{
-
-        os << "(" << edge->x << ","  << edge->y << ")";
-    }
+    os << "}";
+    ;
     return os;
 }
 
@@ -208,10 +34,8 @@ Vertex::Vertex(float x, float y)
 
 float Vertex::lengthSquared()
 {
-    return((this->x * this->x) + (this->y * this->y));
+    return ((this->x * this->x) + (this->y * this->y));
 }
-
-
 
 QuadEdge::QuadEdge()
 {
@@ -229,7 +53,7 @@ QuadEdge::QuadEdge()
 }
 
 // Creates a triangle given 3 vertices
-Triangulation::Triangulation(Vertex* a, Vertex* b, Vertex* c)
+Triangulation::Triangulation(Vertex *a, Vertex *b, Vertex *c)
 {
     LOG(INFO) << "Creating triangulation";
     Edge *e1 = makeEdge();
@@ -242,7 +66,7 @@ Triangulation::Triangulation(Vertex* a, Vertex* b, Vertex* c)
 
     splice(e1->sym(), e2);
 
-    Edge* e3 = makeEdge();
+    Edge *e3 = makeEdge();
     e3->setOrigin(c);
     e3->setDest(a);
     splice(e2->sym(), e3);
@@ -252,11 +76,9 @@ Triangulation::Triangulation(Vertex* a, Vertex* b, Vertex* c)
     LOG(INFO) << "Edge the: " << e3;
 
     this->startingEdge = e1;
-
 }
 
-
-void Triangulation::insertSite(Vertex* x)
+void Triangulation::insertSite(Vertex *x)
 {
     Edge *e = locate(x, startingEdge);
     LOG(INFO) << "located point" << e;
@@ -264,19 +86,19 @@ void Triangulation::insertSite(Vertex* x)
     if (x == e->getOrigin() || x == e->getDest())
     {
         // X is origin or destination of edge -> ignore + return
-        LOG(INFO) << "point was org or dest" ;
+        LOG(INFO) << "point was org or dest";
         return;
     }
     else if (e->hasPoint(x))
     {
         // X lies on edge e
-        LOG(INFO) << "point on edge" ;
+        LOG(INFO) << "point on edge";
         e = e->oPrev();
         deleteEdge(e->oNext());
     }
 
     Edge *base = makeEdge();
-    LOG(INFO) << "Made QE" ;
+    LOG(INFO) << "Made QE";
 
     base->setOrigin(e->getOrigin());
     base->setDest(e->getDest());
@@ -284,8 +106,7 @@ void Triangulation::insertSite(Vertex* x)
     splice(base, e);
     startingEdge = base;
 
-     LOG(INFO) << "Made base" ;
-
+    LOG(INFO) << "Made base";
 
     do
     {
@@ -296,13 +117,13 @@ void Triangulation::insertSite(Vertex* x)
 
     while (true)
     {
-        Edge* t = e->oPrev();
+        Edge *t = e->oPrev();
         if (RightOf(e, t->getDest()) &&
             InCircle(e->getOrigin(), t->getDest(), e->getDest(), x))
-            {
-                swapEdge(e);
-                e = e->oPrev();
-            }
+        {
+            swapEdge(e);
+            e = e->oPrev();
+        }
         else if (e->oNext() == startingEdge)
         {
             return;
@@ -311,7 +132,5 @@ void Triangulation::insertSite(Vertex* x)
         {
             e = e->oNext()->lPrev();
         }
-
     }
 }
-
