@@ -2,12 +2,19 @@
 #include "Edge.h"
 #include "Vertex.h"
 #include "common.h"
+#include <vector>
+#include <tuple>
 
+typedef std::tuple<std::vector<Edge*>, std::vector<Edge*> > EdgeTuple;
 class Triangulation
 {
+    
 public:
+    Triangulation(){};
     Triangulation(Vertex* a, Vertex* b, Vertex* c);
+    
     void insertSite(Vertex* x);
+    EdgeTuple divideAndConquer(std::vector<Vertex*> points);
     std::vector<Edge*> m_edges;
 
     Edge* connect(Edge* e1, Edge* e2)
@@ -76,8 +83,11 @@ public:
     }
     void deleteEdge(Edge *edge)
     {
+        m_edges.erase(std::remove(m_edges.begin(), m_edges.end(), edge), m_edges.end());
+
         splice(edge, edge->oPrev());
         splice(edge->sym(), edge->sym()->oPrev());
+
     }
 
 Edge *locate(Vertex *x, Edge *e)

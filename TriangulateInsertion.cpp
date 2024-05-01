@@ -4,6 +4,7 @@
 
 INITIALIZE_EASYLOGGINGPP
 
+typedef std::tuple<std::vector<Edge*>, std::vector<Edge*> > EdgeTuple;
 
 std::vector<Vertex *> makePoints(int n)
 {
@@ -21,8 +22,8 @@ std::vector<Vertex *> makePoints(int n)
     }
 
     // Sort it lexicographically; we need this step
-    //std::sort(buffer.begin(), buffer.end());
-    //buffer.erase(std::unique(buffer.begin(), buffer.end()), buffer.end());
+    // std::sort(buffer.begin(), buffer.end());
+    // buffer.erase(std::unique(buffer.begin(), buffer.end()), buffer.end());
 
     std::vector<Vertex *> points;
 
@@ -51,18 +52,13 @@ void InitializeLogger()
 int main()
 {
     InitializeLogger();
-    std::vector<Vertex *> points = makePoints(800);
-    std::vector<Vertex *> unprocessedPoints;
-    std::vector<QuadEdge *> edgeList;
-    Edge *startingEdge;
+    std::vector<Vertex *> points = makePoints(1000);
+    EdgeTuple edges;
 
-    QuadEdge *q = new QuadEdge();
-    q->edges[0].setOrigin(new Vertex(0,0));
-    q->edges[0].setDest(new Vertex(10,10));
-
-    LOG(INFO) << *q;
 
    // exit(1);
+
+   // Insertion
     Triangulation tri(points[0], points[1], points[2]);
     LOG(INFO) << "made triangle";
 
@@ -80,6 +76,19 @@ int main()
         std::cout << "" << tri.m_edges[i] << std::endl;
     }
     std::cout << "\n\n";
+
+
+    // Divide and Conquer
+    // Triangulation tri{};
+    // edges = tri.divideAndConquer(points);
+
+    // for (size_t i = 0; i < tri.m_edges.size(); i++)
+    // {
+    //     std::cout << "\n" << tri.m_edges[i] << std::endl;
+    // }
+    // std::cout << "\n\n";
+
+    
 
     return 0;
 }
