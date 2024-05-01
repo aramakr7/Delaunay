@@ -37,12 +37,6 @@ Triangulation::Triangulation(Vertex* a, Vertex* b, Vertex* c)
 void Triangulation::insertSite(Vertex* x)
 {
 
-    for (size_t i = 0; i < m_edges.size(); i++)
-    {
-        std::cout << "\n\t" << m_edges[i] << std::endl;
-    }
-    std::cout << "\n\n";
-
     Edge* e = locate(x, m_startingEdge);
     LOG(INFO) << "located point" << e;
 
@@ -66,16 +60,16 @@ void Triangulation::insertSite(Vertex* x)
     base->setOrigin(e->getOrigin());
     base->setDest(x);
 
-    LOG(INFO) << "Made QE" << base;
 
     splice(base, e);
     m_startingEdge = base;
+    LOG(INFO) << "Made base" << base;
 
-    LOG(INFO) << "Made base";
 
     do
     {
         base = connect(e, base->sym());
+        LOG(INFO) << "Made edge" << base;
         e = base->oPrev();
 
     } while (e->lNext() != m_startingEdge);

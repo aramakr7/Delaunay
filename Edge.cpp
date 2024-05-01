@@ -44,7 +44,7 @@ Edge *Edge::invRot()
 Edge *Edge::sym()
 {
     LOG(DEBUG);
-    if (this->index > 2)
+    if (this->index >= 2)
     {
         return this - 2;
     }

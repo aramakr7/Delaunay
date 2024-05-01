@@ -36,8 +36,9 @@ std::vector<Vertex *> makePoints(int n)
     points.push_back(new Vertex(88, 101));
     points.push_back(new Vertex(444, 208));
     points.push_back(new Vertex(137, 362));
-    points.push_back(new Vertex(478, 405));
-    points.push_back(new Vertex(456, 220));
+    //points.push_back(new Vertex(478, 405));
+    //points.push_back(new Vertex(456, 220));
+    points.push_back(new Vertex(200, 200));
 
     return points;
 }
@@ -80,6 +81,13 @@ int main()
         LOG(INFO) << points[i]->x << ", " << points[i]->y;
         tri.insertSite(points[i]);
     }
+
+
+    for (size_t i = 0; i < tri.m_edges.size(); i++)
+    {
+        std::cout << "\n\t" << tri.m_edges[i] << std::endl;
+    }
+    std::cout << "\n\n";
 
     return 0;
 }
