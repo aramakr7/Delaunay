@@ -156,7 +156,7 @@ int main()
     std::vector<QuadEdge *> edgeList;
     Edge *startingEdge;
     Triangulation tri(points[0], points[1], points[2]);
-            LOG(INFO) << "made triangle" ;
+    LOG(INFO) << "made triangle" ;
 
     for (int i = 3; i < points.size(); i++)
     {

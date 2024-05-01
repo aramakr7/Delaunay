@@ -177,7 +177,15 @@ std::ostream& operator<<(std::ostream& os, const Edge* edge) {
 
 
 std::ostream& operator<<(std::ostream& os, const Vertex* edge) {
-    os << edge->x << ","  << edge->y;
+    if (edge == nullptr)
+    {   
+        os << " (edge is null)";
+
+    }
+    else{
+
+        os << "(" << edge->x << ","  << edge->y << ")";
+    }
     return os;
 }
 
