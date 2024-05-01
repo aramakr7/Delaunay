@@ -4,6 +4,7 @@
 
 #include <vector>
 #include <cmath>
+#include <iostream>
 
 class Edge;
 class Vertex;
@@ -49,7 +50,9 @@ class Edge
         bool hasPoint(Vertex* p);
 
 
-    private:
+
+        // Overloaded << operator as a friend function
+        friend std::ostream& operator<<(std::ostream& os, const Edge* edge);
         Vertex* origin;
         Vertex* dest;
         Edge* next;
@@ -68,7 +71,8 @@ class Vertex
         void addEdge(Edge* edge);
         float lengthSquared();
 
-    private:
+        // Overloaded << operator as a friend function
+        friend std::ostream& operator<<(std::ostream& os, const Vertex* edge);
         Edge* edge;
 
 };

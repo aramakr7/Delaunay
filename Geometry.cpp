@@ -88,6 +88,7 @@ void Edge::setNext(Edge* next)
 
 void Edge::setOrigin(Vertex* origin)
 {
+    LOG(INFO) << "setOrigin" << origin;
     this->origin = origin;
 }
 
@@ -138,17 +139,47 @@ bool Edge::hasPoint(Vertex* p)
     }
     else
     {
+        LOG(INFO) << "Here?" ;
         float pointSlope = ((this->dest->y - p->y)/(this->dest->x - p->x));
+        LOG(INFO) << "Here?" ;
         if (abs(pointSlope) == abs(this->slope()))
         {
             return true;
         }
     }
 
+    LOG(INFO) << "Here?" ;
     return false;
 
 }
+// Definition of the overloaded << operator
+std::ostream& operator<<(std::ostream& os, const Edge* edge) {
+    os << "Edge: (["<< edge->index << "] ";
+    if ( edge->origin != nullptr )
+    {
+        os << "Origin:" << edge->origin;
+    }
+    else
+    {
+        os << "Origin: null";
+    }
+    if ( edge->dest != nullptr )
+    {
+        os <<" Dest:" << edge->dest;
+    }
+    else
+    {
+        os << "Dest: null";
+    }
+    os <<  ")";
+    return os;
+}
 
+
+std::ostream& operator<<(std::ostream& os, const Vertex* edge) {
+    os << edge->x << ","  << edge->y;
+    return os;
+}
 
 Vertex::Vertex(float x, float y)
 {
@@ -205,7 +236,7 @@ Triangulation::Triangulation(Vertex* a, Vertex* b, Vertex* c)
 void Triangulation::insertSite(Vertex* x)
 {
     Edge *e = locate(x, startingEdge);
-    LOG(INFO) << "located point" ;
+    LOG(INFO) << "located point" << e;
 
     if (x == e->getOrigin() || x == e->getDest())
     {
