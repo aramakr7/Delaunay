@@ -1,4 +1,5 @@
 #include "common.h"
+#include "Triangulation.h"
 
 INITIALIZE_EASYLOGGINGPP
 
@@ -125,7 +126,7 @@ std::vector<Vertex*> makePoints(int n)
     std::vector<Vertex*> points;
 
 	// Turn it into Verts for the convenience of our algorithm
-	for (int i = 0; i < buffer.size(); i++)
+	for (size_t i = 0; i < buffer.size(); i++)
 	{
 		points.push_back(new Vertex(buffer[i][0], buffer[i][1]));
 	}
@@ -165,7 +166,7 @@ int main()
     Triangulation tri(points[0], points[1], points[2]);
     LOG(INFO) << "made triangle" ;
 
-    for (int i = 3; i < points.size(); i++)
+    for (size_t i = 3; i < points.size(); i++)
     {
         LOG(INFO) << "point: " << i + 1 ;
         LOG(INFO) << points[i]->x << ", " << points[i]->y ;

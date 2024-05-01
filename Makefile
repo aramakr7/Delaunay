@@ -1,27 +1,13 @@
-PROGRAM = TriangulateInsertion
-
-SOURCES = \
-	Geometry.cpp \
-	TriangulateInsertion.cpp \
-	determinate.cpp \
-	easylogging++.cc \
-	$()
-
-$(PROGRAM): $(SOURCES)
-	g++ -std=c++11 -g -O0 -o $(PROGRAM) $(SOURCES)
-
-clean:
-	rm -f $(PROGRAM)
 
 
 	# Compiler and flags
 CXX = g++
-CXXFLAGS = -Wall -std=c++14
+CXXFLAGS = -std=c++11 -g -O0 -Wall
 
 # Directories
 SRCDIR = .
 BUILDDIR = build
-TARGET = myprogram
+TARGET = TriangulateInsertion
 
 # Files and dependencies
 SOURCES = $(wildcard $(SRCDIR)/*.cpp)

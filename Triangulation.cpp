@@ -1,56 +1,11 @@
-#include "Geometry.h"
+
+#include "easylogging++.h"
+
+
+#include "Triangulation.h"
 #include "common.h"
 
-std::ostream &operator<<(std::ostream &os, const Vertex *edge)
-{
-    if (edge == nullptr)
-    {
-        os << " (vertex is null)";
-    }
-    else
-    {
 
-        os << "(" << edge->x << "," << edge->y << ")";
-    }
-    return os;
-}
-std::ostream &operator<<(std::ostream &os, const QuadEdge &qe)
-{
-    os << "QE{";
-    for (int i = 0; i < 4; i++)
-    {
-        os << "\n\t" << &qe.edges[i];
-    }
-    os << "}";
-    ;
-    return os;
-}
-
-Vertex::Vertex(float x, float y)
-{
-    this->x = x;
-    this->y = y;
-}
-
-float Vertex::lengthSquared()
-{
-    return ((this->x * this->x) + (this->y * this->y));
-}
-
-QuadEdge::QuadEdge()
-{
-    edges[0].setIndex(0);
-    edges[0].setNext((edges + 0));
-
-    edges[1].setIndex(1);
-    edges[1].setNext((edges + 3));
-
-    edges[2].setIndex(2);
-    edges[2].setNext((edges + 2));
-
-    edges[3].setIndex(3);
-    edges[3].setNext((edges + 1));
-}
 
 // Creates a triangle given 3 vertices
 Triangulation::Triangulation(Vertex *a, Vertex *b, Vertex *c)
