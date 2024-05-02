@@ -1,5 +1,5 @@
 
-#ifdef matplotlib
+#ifdef WITH_MATPLOTLIB
 #include "matplotlibcpp.h"
 namespace plt = matplotlibcpp;
 #endif
@@ -103,9 +103,9 @@ int main()
     // }
     // std::cout << "\n\n";
 
-    
+
     // Preparing data for plotting
-#ifdef matplotlib
+#ifdef WITH_MATPLOTLIB
     std::vector<double> x, y;
     for (Edge* edge : tri.m_edges) {
         Vertex* origin = edge->getOrigin();
@@ -141,8 +141,8 @@ int main()
         file << "\n\n";
     }
 	else
-    { 
-        std::cout << "Could not open file for writing!\n";
+    {
+        LOG(ERROR) << "Could not open file for writing!";
     }
     file.close();
     return 0;

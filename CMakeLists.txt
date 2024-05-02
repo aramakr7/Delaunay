@@ -20,18 +20,14 @@ file(GLOB SOURCES "${SRCDIR}/*.cpp")
 add_executable(${PROJECT_NAME} ${SOURCES})
 
 # Find Python and NumPy
-find_package(Python3 COMPONENTS Interpreter Development REQUIRED)
-if(Python3_FOUND)
-target_include_directories(${PROJECT_NAME} PRIVATE ${Python3_INCLUDE_DIRS})
-  target_link_libraries(${PROJECT_NAME} PRIVATE Python3::Python)
-endif()
-
+find_package(Python3 COMPONENTS Interpreter Development)
 find_package(Python3 COMPONENTS NumPy)
-if(Python3_NumPy_FOUND)
-    target_include_directories(${PROJECT_NAME} PRIVATE ${Python3_NumPy_INCLUDE_DIRS})
+if(Python3_FOUND AND Python3_NumPy_FOUND)
+  target_include_directories(${PROJECT_NAME} PRIVATE ${Python3_INCLUDE_DIRS})
+  target_link_libraries(${PROJECT_NAME} PRIVATE Python3::Python)
+  target_include_directories(${PROJECT_NAME} PRIVATE ${Python3_NumPy_INCLUDE_DIRS})
   target_link_libraries(${PROJECT_NAME} PRIVATE Python3::NumPy)
-else()
-  target_compile_definitions(${PROJECT_NAME} PRIVATE WITHOUT_NUMPY)
+  target_compile_definitions(${PROJECT_NAME} PRIVATE WITH_MATPLOTLIB)
 endif()
 
 # Set the output directory for executable files
