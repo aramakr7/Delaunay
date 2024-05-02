@@ -4,6 +4,27 @@
 #include "Vertex.h"
 #include "easylogging++.h"
 
+
+
+
+bool operator==(const Vertex& l, const Vertex& r)
+{
+    return (l.x == r.x && l.y == r.y);
+}
+bool operator==(const Edge& l, const Edge& r)
+{
+    return (l.origin == r.origin && l.dest == r.dest) || (l.origin == r.dest && l.dest == r.origin);
+}
+
+bool operator<(const Vertex& l, const Vertex& r)
+{
+    return (l.x < r.x && l.y < r.y);
+}
+bool operator<(const Edge& l, const Edge& r)
+{
+    return l.origin < r.origin;
+}
+
 Edge::Edge(Vertex* origin)
 {
     this->origin = origin;
