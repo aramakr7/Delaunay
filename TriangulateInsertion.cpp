@@ -131,8 +131,7 @@ int main()
 #endif
 
     //Write to csv
-    std::fstream file;
-	file.open("points.txt");
+    std::ofstream file("points.txt");
     if (file.is_open())
     {
         for (size_t i = 0; i < tri.m_edges.size(); i++)
