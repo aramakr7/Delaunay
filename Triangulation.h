@@ -83,7 +83,8 @@ public:
     }
     void deleteEdge(Edge *edge)
     {
-        m_edges.erase(std::remove(m_edges.begin(), m_edges.end(), edge), m_edges.end());
+        // m_edges.erase(std::remove(m_edges.begin(), m_edges.end(), edge), m_edges.end());
+        // m_edges.erase(std::remove(m_edges.begin(), m_edges.end(), edge->sym()), m_edges.end());
 
         splice(edge, edge->oPrev());
         splice(edge->sym(), edge->sym()->oPrev());

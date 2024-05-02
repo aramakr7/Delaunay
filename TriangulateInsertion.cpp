@@ -1,6 +1,8 @@
 #include "common.h"
 #include "Triangulation.h"
 #include "QuadEdge.h"
+#include <tuple>
+#include <vector>
 
 INITIALIZE_EASYLOGGINGPP
 
@@ -17,7 +19,7 @@ std::vector<Vertex *> makePoints(int n)
     // Build a buffer list
     for (int i = 0; i < n; i++)
     {
-        std::vector<int> xy = {rand() % 512, rand() % 512};
+        std::vector<int> xy = {rand() % 50, rand() % 50};
         buffer.push_back(xy);
     }
 
@@ -27,11 +29,17 @@ std::vector<Vertex *> makePoints(int n)
 
     std::vector<Vertex *> points;
 
+    points.push_back(new Vertex(41, 23));
+    points.push_back(new Vertex(43, 16));
+    points.push_back(new Vertex(29, 39));
+    points.push_back(new Vertex(3, 32));
+    points.push_back(new Vertex(3, 42));
+
     // Turn it into Verts for the convenience of our algorithm
-    for (size_t i = 0; i < buffer.size(); i++)
-    {
-        points.push_back(new Vertex(buffer[i][0], buffer[i][1]));
-    }
+    // for (size_t i = 0; i < buffer.size(); i++)
+    // {
+    //     points.push_back(new Vertex(buffer[i][0], buffer[i][1]));
+    // }
 
     return points;
 }
@@ -52,7 +60,7 @@ void InitializeLogger()
 int main()
 {
     InitializeLogger();
-    std::vector<Vertex *> points = makePoints(1000);
+    std::vector<Vertex *> points = makePoints(5);
     EdgeTuple edges;
 
 
