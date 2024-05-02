@@ -130,5 +130,21 @@ int main()
     plt::show();
 #endif
 
+    //Write to csv
+    std::fstream file;
+	file.open("points.txt");
+    if (file.is_open())
+    {
+        for (size_t i = 0; i < tri.m_edges.size(); i++)
+        {
+            file << "" << tri.m_edges[i] << std::endl;
+        }
+        file << "\n\n";
+    }
+	else
+    { 
+        std::cout << "Could not open file for writing!\n";
+    }
+    file.close();
     return 0;
 }
