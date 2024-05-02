@@ -1,8 +1,15 @@
+
+#ifdef matplotlib
+#include "matplotlibcpp.h"
+namespace plt = matplotlibcpp;
+#endif
+
 #include "common.h"
 #include "Triangulation.h"
 #include "QuadEdge.h"
 #include <tuple>
 #include <vector>
+
 
 INITIALIZE_EASYLOGGINGPP
 
@@ -24,8 +31,8 @@ std::vector<Vertex *> makePoints(int n)
     }
 
     // Sort it lexicographically; we need this step
-    // std::sort(buffer.begin(), buffer.end());
-    // buffer.erase(std::unique(buffer.begin(), buffer.end()), buffer.end());
+    std::sort(buffer.begin(), buffer.end());
+    buffer.erase(std::unique(buffer.begin(), buffer.end()), buffer.end());
 
     std::vector<Vertex *> points;
 
@@ -97,6 +104,31 @@ int main()
     // std::cout << "\n\n";
 
     
+    // Preparing data for plotting
+#ifdef matplotlib
+    std::vector<double> x, y;
+    for (Edge* edge : tri.m_edges) {
+        Vertex* origin = edge->getOrigin();
+        Vertex* dest = edge->getDest();
+
+        // Append origin and destination for each edge
+        x.push_back(origin->x);
+        y.push_back(origin->y);
+        x.push_back(dest->x);
+        y.push_back(dest->y);
+
+        // Optional: Separate lines if you don't want a continuous line
+        x.push_back(NAN); // NaN breaks the line in matplotlib plots
+        y.push_back(NAN);
+    }
+
+    // Plotting
+    plt::plot(x, y, "r-"); // 'r-' for red lines
+    plt::title("Edge Plot");
+    plt::xlabel("X axis");
+    plt::ylabel("Y axis");
+    plt::show();
+#endif
 
     return 0;
 }
